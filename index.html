@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4a90e2;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .weather-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .weather-info {
+            margin-bottom: 20px;
+        }
+
+        .weather-info p {
+            margin: 5px 0;
+            font-size: 1.2em;
+        }
+
+        .weather-info .temperature {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff8c00;
+        }
+
+        .weather-info .condition {
+            font-size: 1.5em;
+            color: #4a90e2;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        .footer a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Weather Dashboard</h1>
+
+    <div class="weather-container">
+        <div class="search-bar">
+            <input type="text" id="city" placeholder="Enter city name" oninput="fetchWeather()">
+        </div>
+        <div class="weather-info">
+            <p class="temperature" id="temp">--°C</p>
+            <p class="condition" id="condition">--</p>
+            <p id="humidity">Humidity: --%</p>
+            <p id="wind">Wind Speed: -- km/h</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by <a href="https://openweathermap.org" target="_blank">OpenWeatherMap</a></p>
+    </div>
+
+    <script>
+        // Function to fetch weather data based on city
+        function fetchWeather() {
+            let city = document.getElementById('city').value;
+            if (city.length >= 3) {
+                const apiKey = 'YOUR_API_KEY';  // Get your own API key from OpenWeatherMap
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.cod === 200) {
+                            const temperature = data.main.temp;
+                            const condition = data.weather[0].description;
+                            const humidity = data.main.humidity;
+                            const windSpeed = data.wind.speed;
+
+                            document.getElementById('temp').textContent = `${temperature}°C`;
+                            document.getElementById('condition').textContent = condition.charAt(0).toUpperCase() + condition.slice(1);
+                            document.getElementById('humidity').textContent = `Humidity: ${humidity}%`;
+                            document.getElementById('wind').textContent = `Wind Speed: ${windSpeed} km/h`;
+                        } else {
+                            alert('City not found!');
+                        }
+                    })
+                    .catch(error => alert('Error fetching weather data.'));
+            }
+        }
+    </script>
+
+</body>
+</html>
